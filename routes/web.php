@@ -20,3 +20,7 @@ Route::get('/', function () {
 Route::get('/alamat', function () {
     echo 'alamat';
 });
+
+Route::get('/pelanggan', function () {
+    echo 'pelanggan';
+});
