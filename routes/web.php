@@ -24,3 +24,8 @@ Route::get('/alamat', function () {
 Route::get('/pelanggan', function () {
     echo 'pelanggan';
 });
+
+Route::get('/about', function () {
+    echo 'about';
+});
+
