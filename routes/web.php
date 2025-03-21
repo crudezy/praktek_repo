@@ -21,6 +21,11 @@ Route::get('/alamat', function () {
     echo 'alamat';
 });
 
+Route::get('/pelanggan', function () {
+    echo 'pelanggan';
+});
+
 Route::get('/about', function () {
     echo 'about';
 });
+
