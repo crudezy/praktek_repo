@@ -69,13 +69,13 @@ class LaundryTransResource extends Resource
                     $set('total_harga', number_format((float) $state * 6000, 2, ',', '.')) // Hitung total harga otomatis dengan 2 desimal
                 ),
             
-            Select::make('paket_layanan')
-                ->label('Paket Layanan')
+            Select::make('jenis_cucian')
+                ->label('Jenis Cucian')
                 ->options([
-                    'Laundry Kiloan' => 'Laundry Kiloan',
-                    'Dry Cleaning' => 'Dry Cleaning',
-                    'Laundry Self Service' => 'Laundry Self Service',
-                    'Laundry On Demand' => 'Laundry On Demand',
+                    'Pakaian' => 'Pakaian',
+                    'Selimut' => 'Selimut',
+                    'Boneka' => 'Boneka',
+                    'Sprei' => 'Sprei',
                 ])
                 ->required(),
 
@@ -132,8 +132,8 @@ class LaundryTransResource extends Resource
                     ->label('Total Berat (Kg)')
                     ->sortable(),
 
-                TextColumn::make('paket_layanan')
-                    ->label('Paket Layanan')
+                TextColumn::make('jenis_cucian')
+                    ->label('Jenis Cucian')
                     ->sortable(),
 
                 TextColumn::make('status_laundry')

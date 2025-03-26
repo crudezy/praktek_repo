@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('tanggal_order');
             $table->date('tanggal_pengambilan');
             $table->decimal('total_berat', 50, 2);
-            $table->enum('paket_layanan', ['Laundry Kiloan', 'Dry Cleaning', 'Laundry Self Service', 'Laundry On Demand'])->default('Laundry Kiloan');
+            $table->enum('jenis_cucian', ['Pakaian', 'Selimut', 'Boneka', 'Sprei'])->default('Pakaian');
             $table->enum('status_laundry', ['Diproses', 'Selesai', 'Diambil'])->default('Diproses');
             $table->decimal('total_harga', 50, 2);
             $table->timestamps();
