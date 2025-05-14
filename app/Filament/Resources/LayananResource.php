@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
-
 use App\Filament\Resources\LayananResource\Pages;
 use App\Filament\Resources\LayananResource\RelationManagers;
 use App\Models\Layanan;
@@ -13,9 +12,13 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+
 
 class LayananResource extends Resource
 {
@@ -58,6 +61,9 @@ class LayananResource extends Resource
                         '2 Hari' =>'2 Hari', 
                         '3 Hari' =>'3 Hari'
                         ]),
+                FileUpload::make('foto')
+                        ->directory('foto')
+                        ->required(),
                 TextInput::make('keterangan')
                     ->label('Keterangan')
                     ->maxLength(255)
@@ -88,6 +94,8 @@ class LayananResource extends Resource
                 TextColumn::make('time_estimasi')
                     ->label('Estimasi Waktu')
                     ->sortable(),
+
+                ImageColumn::make('foto'),
             
                 TextColumn::make('keterangan')
                     ->label('Keterangan')

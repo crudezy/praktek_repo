@@ -6,7 +6,7 @@ use App\Models\Layanan;
 use App\Http\Requests\StoreLayananRequest;
 use App\Http\Requests\UpdateLayananRequest;
 
-class LayananController extends Controller
+class KeranjangController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\DB;
 class Layanan extends Model
 {
     use HasFactory;
-    protected $table = 'layanans';
+
+    protected $table = 'layanans'; // Nama tabel eksplisit
 
     protected $guarded = [];
 
+    // Fungsi untuk menghasilkan ID layanan baru
     public static function getIdLayanan()
     {
         // Ambil ID layanan terakhir
@@ -33,4 +35,15 @@ class Layanan extends Model
         return 'LYN-' . str_pad($nomor, 3, "0", STR_PAD_LEFT);
     }
 
+    // Mutator untuk menghapus koma dari harga sebelum menyimpannya ke database
+    public function setHargaAttribute($value)
+    {
+        $this->attributes['harga'] = str_replace(',', '', $value);
+    }
+
+    // Relasi dengan tabel penjualan_layanan (many-to-many)
+    public function penjualanLayanan()
+    {
+        return $this->hasMany(PenjualanLayanan::class, 'id_layanan');
+    }
 }
