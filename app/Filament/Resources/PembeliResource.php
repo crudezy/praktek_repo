@@ -30,7 +30,7 @@ class PembeliResource extends Resource
     protected static ?string $navigationLabel = 'Pembeli';
 
     // tambahan buat grup masterdata
-    protected static ?string $navigationGroup = 'Masterdata';
+    protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {
