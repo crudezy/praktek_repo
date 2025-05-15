@@ -45,7 +45,8 @@ class LayananResource extends Resource
                     ->reactive() // Membuat dropdown reaktif
                     ->afterStateUpdated(fn ($state, callable $set) => match ($state) {
                         'Cuci Kering' => tap($set('harga', 4000), fn () => $set('keterangan', 'Paket ini mencakup layanan pencucian dan pengeringan pakaian.')),
-                        'Cuci Setrika' => tap($set('harga', 6000), fn () => $set('keterangan', 'Paket ini mencakup layanan pencucian dan penyetrikaan pakaian.')),
+                        'Setrika' => tap($set('harga', 5000), fn () => $set('keterangan', 'Paket ini mencakup layanan penyetrikaan pakaian.')),
+                        'Cuci Kering & Setrika' => tap($set('harga', 6000), fn () => $set('keterangan', 'Paket ini mencakup layanan pencucian dan penyetrikaan pakaian.')),
                         default => tap($set('harga', null), fn () => $set('keterangan', null)),
                     }),
     
