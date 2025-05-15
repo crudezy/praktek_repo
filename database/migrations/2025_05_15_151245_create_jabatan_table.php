@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jabatan', function (Blueprint $table) {           
-            $table->id(); // Kolom id (auto increment primary key)
+        Schema::create('jabatan', function (Blueprint $table) {
+            $table->string('id_jabatan'); // Kolom id (auto increment primary key)
             $table->string('nama_jabatan'); // Kolom nama_jabatan (varchar)
             $table->decimal('gaji', 15, 2); // Kolom gaji (decimal 15 digit, 2 angka di belakang koma)
             $table->timestamps(); // Kolom created_at dan updated_at
