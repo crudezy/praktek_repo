@@ -46,3 +46,6 @@ Route::get('/ubahpassword', [App\Http\Controllers\AuthController::class, 'ubahpa
     ->name('ubahpassword');
 Route::post('/prosesubahpassword', [App\Http\Controllers\AuthController::class, 'prosesubahpassword'])
     ->middleware('customer');
+
+use App\Http\Controllers\JabatanController;
+Route::resource('jabatan', JabatanController::class);
