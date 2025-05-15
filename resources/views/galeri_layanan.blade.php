@@ -6,6 +6,7 @@
     <table class="table" id="layanan-table">
         <thead>
             <tr>
+                <th>Gambar</th>
                 <th>ID Layanan</th>
                 <th>Nama Paket</th>
                 <th>Harga (per kg)</th>
@@ -18,6 +19,9 @@
         <tbody>
             @foreach ($layanan as $layanan)
             <tr data-id="{{ $layanan->id_layanan }}" data-harga="{{ $layanan->harga }}">
+                <td>
+                    <img src="{{ asset('images/' . $layanan->gambar) }}" alt="Foto" width="70" height="70" style="object-fit: cover;">
+                </td>
                 <td>{{ $layanan->id_layanan }}</td>
                 <td>{{ $layanan->nama_paket }}</td>
                 <td>{{ number_format($layanan->harga, 0, ',', '.') }}</td>
@@ -81,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const tr = this.closest('tr');
             const id = tr.getAttribute('data-id');
-            const nama = tr.children[1].textContent;
+            const nama = tr.children[2].textContent;
             const harga = parseFloat(tr.getAttribute('data-harga'));
             const beratInput = tr.querySelector('.berat-input');
             const berat = parseFloat(beratInput.value);

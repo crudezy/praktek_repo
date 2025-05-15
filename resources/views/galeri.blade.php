@@ -192,7 +192,7 @@
              <meta name="csrf-token" content="{{ csrf_token() }}">
              <!-- Akhir Tambahan untuk CSRF -->
              <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                @foreach($barang as $p)
+                @foreach($layanans as $p)
                 <div class="col">
                   <div class="product-item">
                     <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
@@ -202,10 +202,10 @@
                         <!-- <img src="images/thumb-bananas.png"  class="tab-image"> -->
                       </a>
                     </figure>
-                    <h3>{{$p->nama_barang}}</h3>
-                    <span class="qty">{{ $p->stok }} Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> {{ $p->rating }}</span>
-                    <span class="price">{{rupiah($p->harga_barang*1.2)}}</span>
-                    <div class="d-flex align-items-center justify-content-between">
+                    <h3>{{$p->nama_paket}}</h3>
+                    <span class="qty">{{ $p->time_estimasi }} Estimasi</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#clock-fast"></use></svg>
+                    <span class="price">{{rupiah($p->harga *1.2)}}</span>
+                      <div class="d-flex align-items-center justify-content-between">
                       <div class="input-group product-qty">
                         <span class="input-group-btn">
                             <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-id="{{ $p->id }}" data-type="minus">
@@ -219,7 +219,13 @@
                             </button>
                         </span>
                       </div>
-                      <a href="#" class="nav-link" onclick="addToCart({{$p->id}})">Add to Cart <iconify-icon icon="uil:shopping-cart"></a>
+                      
+                      <div class="d-flex align-items-center gap-2">
+                        <div class="border rounded px-2 py-1">
+                          <span class="weight-label text-muted" style="font-size: 0.9rem;">{{ $p->berat }} kg</span>
+                        </div>
+                        <a href="#" class="nav-link m-0 p-0" onclick="addToCart({{$p->id}})">Add to Cart <iconify-icon icon="uil:shopping-cart"></iconify-icon></a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -266,15 +272,10 @@
 
       // fungsi untuk menangani request
     function addToCart(productId) {
-        // let quantity = document.getElementById('quantity-' + productId).value;
         let quantityInput = document.getElementById("quantity-" + productId);
         let quantity = parseInt(quantityInput.value) || 1;
-        // let quantity = quantityInput.value;
-        // console.log(quantity);
-        // console.log(productId);
-         // Data yang dikirim ke controller
         let formData = new FormData();
-        formData.append('product_id', productId);
+        formData.append('id_layanan', productId);
         formData.append('quantity', quantity);
         
         // Kirim data ke Laravel melalui fetch ke method tambah
@@ -286,21 +287,7 @@
             body: formData
         })
         .then(response => response.json()) // Ubah respons menjadi JSON
-        // .then(response => {
-        //         console.log(response.text());
-        //         return response.text(); // Cek apakah ini JSON yang valid
-        //       }
-        // ) // Ubah respons menjadi JSON
-        // .then(response => response.text()) // Ubah respons menjadi JSON
-        // .then(text => {
-        // console.log("RESPONSE:", text); // Lihat isi HTML error
-        //     try {
-        //         const data = JSON.parse(text);
-        //         console.log(data);
-        //     } catch (err) {
-        //         console.error("Gagal parsing JSON:", err);
-        //     }
-        // })
+      
         .then(data => {
             if (data.success) {
                 // alert("Produk berhasil ditambahkan ke keranjang!");

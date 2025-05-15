@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // method untuk menampilkan halaman awal login  
+    // method untuk menampilkan halaman awal login
     public function showLoginForm()
     {
         return view('login');

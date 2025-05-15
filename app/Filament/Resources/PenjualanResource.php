@@ -81,7 +81,7 @@ class PenjualanResource extends Resource
                                         ->afterStateUpdated(function ($state, $set) {
                                             $layanan = Layanan::find($state);
                                             $set('harga_beli', $layanan ? $layanan->harga : 0);
-                                            $set('harga_jual', $layanan ? $layanan->harga * 1.2 : 0);
+                                            $set('harga_jual', $layanan ? $layanan->harga : 0);
                                         }),
                                     TextInput::make('harga_beli')
                                         ->label('Harga Beli')
