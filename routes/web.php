@@ -78,6 +78,7 @@ Route::get('/ubahpassword', [App\Http\Controllers\AuthController::class, 'ubahpa
     ->middleware('customer')
     ->name('ubahpassword');
 Route::post('/prosesubahpassword', [App\Http\Controllers\AuthController::class, 'prosesubahpassword'])
+<<<<<<< HEAD
     ->middleware('customer')
 ;
 // prosesubahpassword
@@ -91,3 +92,9 @@ Route::get('/perusahaan/destroy/{id}', [PerusahaanController::class,'destroy']);
 // contoh sampel midtrans
 use App\Http\Controllers\CobaMidtransController;
 Route::get('/cekmidtrans', [CobaMidtransController::class, 'cekmidtrans']);
+=======
+    ->middleware('customer');
+
+use App\Http\Controllers\JabatanController;
+Route::resource('jabatan', JabatanController::class);
+>>>>>>> ba9c7c36cccd3ad1fa9aa4de034e2bc9d93de9dd
