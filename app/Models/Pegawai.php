@@ -50,5 +50,11 @@ protected static function boot()
     
 }
 
+// relasi ke tabel penjualan
+    public function penggajian()
+    {
+        return $this->hasMany(Penggajian::class, 'id_pegawai');
+    }
+
 
 }

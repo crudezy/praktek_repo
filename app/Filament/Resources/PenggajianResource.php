@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PenjualanResource\Pages;
-use App\Models\Penjualan;
-use App\Models\Pembeli;
-use App\Models\Layanan;
-use App\Models\Pembayaran;
-use App\Models\PenjualanLayanan;
+use App\Filament\Resources\PenggajianResource\Pages;
+use App\Models\Penggajian;
+use App\Models\Pegawai;
+use App\Models\Jabatan;
+use App\Models\ListPenggajian;
+use App\Models\PenggajianPegawai;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,13 +26,13 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class PenjualanResource extends Resource
+class PenggajianResource extends Resource
 {
-    protected static ?string $model = Penjualan::class;
+    protected static ?string $model = Penggajian::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected static ?string $navigationLabel = 'Penjualan';
+    protected static ?string $navigationLabel = 'Penggajian';
 
     protected static ?string $navigationGroup = 'Transaksi';
 
@@ -47,16 +47,16 @@ class PenjualanResource extends Resource
                                 ->icon('heroicon-m-document-duplicate')
                                 ->schema([
                                     TextInput::make('no_faktur')
-                                        ->default(fn () => Penjualan::getKodeFaktur())
+                                        ->default(fn () => Penggajian::getKodeFaktur())
                                         ->label('Nomor Faktur')
                                         ->required()
                                         ->readonly(),
                                     DateTimePicker::make('tgl')->default(now()),
-                                    Select::make('pembeli_id')
-                                        ->label('Pembeli')
-                                        ->options(Pembeli::pluck('nama_pembeli', 'id')->toArray())
+                                    Select::make('id_pegawai')
+                                        ->label('Pegawai')
+                                        ->options(Pegawai::pluck('nama_pegawai', 'id')->toArray())
                                         ->required()
-                                        ->placeholder('Pilih Pembeli'),
+                                        ->placeholder('Pilih Pegawai'),
                                     TextInput::make('tagihan')
                                         ->default(0)
                                         ->hidden(),
@@ -67,26 +67,26 @@ class PenjualanResource extends Resource
                                 ->collapsible()
                                 ->columns(3),
                         ]),
-                        Wizard\Step::make('Pilih Layanan')
+                        Wizard\Step::make('Pilih Jabatan')
                         ->schema([
                             Repeater::make('items')
-                                ->relationship('penjualanLayanan')
+                                ->relationship('penggajianpegawai')
                                 ->schema([
-                                    Select::make('id_layanan')
-                                        ->label('Layanan')
-                                        ->options(Layanan::pluck('nama_paket', 'id')->toArray())
+                                    Select::make('id_jabatan')
+                                        ->label('Jabatan')
+                                        ->options(Jabatan::pluck('nama_jabatan', 'id')->toArray())
                                         ->required()
                                         ->reactive()
-                                        ->placeholder('Pilih Layanan')
+                                        ->placeholder('Pilih Jabatan')
                                         ->afterStateUpdated(function ($state, $set) {
-                                            $layanan = Layanan::find($state);
-                                            $set('harga_beli', $layanan ? $layanan->harga : 0);
-                                            $set('harga_jual', $layanan ? $layanan->harga : 0);
+                                            $jabatan = Jabatan::find($state);
+                                            $set('harga_beli', $jabatan ? $jabatan->gaji : 0);
+                                            $set('harga_jual', $jabatan ? $jabatan->gaji : 0);
                                         }),
                                     TextInput::make('harga_beli')
                                         ->label('Harga Beli')
                                         ->numeric()
-                                        ->default(fn ($get) => $get('id_layanan') ? Layanan::find($get('id_layanan'))?->harga ?? 0 : 0)
+                                        ->default(fn ($get) => $get('id_jabatan') ? Jabatan::find($get('id_jabatan'))?->gaji ?? 0 : 0)
                                         ->readonly()
                                         ->hidden(),
                                     TextInput::make('harga_jual')
@@ -111,7 +111,7 @@ class PenjualanResource extends Resource
                                 ->addable()
                                 ->deletable()
                                 ->reorderable()
-                                ->createItemButtonLabel('Tambah Layanan')
+                                ->createItemButtonLabel('Tambah Jabatan')
                                 ->minItems(1)
                                 ->required(),
                     
@@ -120,22 +120,22 @@ class PenjualanResource extends Resource
                                 Forms\Components\Actions\Action::make('Proses')
                                     ->action(function ($get) {
                                         // Simpan data penjualan
-                                        $penjualan = Penjualan::updateOrCreate(
+                                        $penggajian = Penggajian::updateOrCreate(
                                             ['no_faktur' => $get('no_faktur')],
                                             [
                                                 'tgl' => $get('tgl'),
-                                                'pembeli_id' => $get('pembeli_id'),
+                                                'id_pegawai' => $get('id_pegawai'),
                                                 'status' => 'pesan',
                                                 'tagihan' => $get('tagihan'),
                                             ]
                                         );
                     
-                                        // Simpan data layanan yang dipilih
+                                        // Simpan data Jabatan yang dipilih
                                         foreach ($get('items') as $item) {
-                                            PenjualanLayanan::updateOrCreate(
+                                            PenggajianPegawai::updateOrCreate(
                                                 [
-                                                    'penjualan_id' => $penjualan->id,
-                                                    'id_layanan' => $item['id_layanan'],
+                                                    'penggajian_id' => $penggajian->id,
+                                                    'id_jabatan' => $item['id_jabatan'],
                                                 ],
                                                 [
                                                     'harga_beli' => $item['harga_beli'],
@@ -147,21 +147,21 @@ class PenjualanResource extends Resource
                                         }
                     
                                         // Hitung total tagihan
-                                        $totalTagihan = PenjualanLayanan::where('penjualan_id', $penjualan->id)
+                                        $totalTagihan = PenggajianPegawai::where('penggajian_id', $penggajian->id)
                                             ->sum(DB::raw('harga_jual * jml'));
                     
-                                        // Update tagihan di tabel penjualan
-                                        $penjualan->update(['tagihan' => $totalTagihan]);
+                                        // Update tagihan di tabel Penggajian
+                                        $penggajian->update(['tagihan' => $totalTagihan]);
                                     })
                                     ->label('Proses')
                                     ->color('primary'),
                             ]),
                         ]),
-                    Wizard\Step::make('Pembayaran')
+                    Wizard\Step::make('ListPenggajian')
                         ->schema([
-                            Placeholder::make('Tabel Pembayaran')
-                                ->content(fn ($get) => view('filament.components.penjualan-table', [
-                                    'pembayarans' => Penjualan::where('no_faktur', $get('no_faktur'))->get(),
+                            Placeholder::make('Tabel ListPenggajian')
+                                ->content(fn ($get) => view('filament.components.penggajian-table', [
+                                    'penggajian' => Penggajian::where('no_faktur', $get('no_faktur'))->get(),
                                 ])),
                         ]),
                 ])->columnSpan(3),
@@ -173,8 +173,8 @@ class PenjualanResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('no_faktur')->label('No Faktur')->searchable(),
-                TextColumn::make('pembeli.nama_pembeli')
-                    ->label('Nama Pembeli')
+                TextColumn::make('pegawai.nama_pegawai')
+                    ->label('Nama Pegawai')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('status')
@@ -193,8 +193,8 @@ class PenjualanResource extends Resource
                 SelectFilter::make('status')
                     ->label('Filter Status')
                     ->options([
-                        'pesan' => 'Proses',
-                        'bayar' => 'Bayar',
+                        'pesan' => 'Pemesanan',
+                        'bayar' => 'Pembayaran',
                     ])
                     ->searchable()
                     ->preload(),
@@ -210,13 +210,13 @@ class PenjualanResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->action(function () {
-                        $penjualan = Penjualan::all();
+                        $penggajian = Penggajian::all();
 
-                        $pdf = Pdf::loadView('pdf.penjualan', ['penjualan' => $penjualan]);
+                        $pdf = Pdf::loadView('pdf.Penggajian', ['Penggajian' => $penggajian]);
 
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
-                            'penjualan-list.pdf'
+                            'Penggajian-list.pdf'
                         );
                     }),
             ])
@@ -237,9 +237,9 @@ class PenjualanResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPenjualans::route('/'),
-            'create' => Pages\CreatePenjualan::route('/create'),
-            'edit' => Pages\EditPenjualan::route('/{record}/edit'),
+            'index' => Pages\ListPenggajians::route('/'),
+            'create' => Pages\CreatePenggajian::route('/create'),
+            'edit' => Pages\EditPenggajian::route('/{record}/edit'),
         ];
     }
 }

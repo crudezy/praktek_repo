@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pegawai', function (Blueprint $table) {
+        Schema::create('penggajian', function (Blueprint $table) {
             $table->id();
-            $table->string('id_pegawai')->unique();
-            $table->string('nama_pegawai');
-            $table->string('alamat');
-            $table->string('no_hp');
-            $table->string('shift_kerja');
+            $table->foreignId('id_pegawai')->constrained('pegawai')->onDelete('cascade');
+            $table->string('no_faktur'); 
+            $table->string('status'); 
+            $table->datetime('tgl'); 
+            $table->decimal('tagihan', 15, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pegawai');
+        Schema::dropIfExists('penggajian');
     }
 };

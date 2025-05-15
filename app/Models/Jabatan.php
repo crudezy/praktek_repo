@@ -51,4 +51,10 @@ class Jabatan extends Model
         return 'Rp ' . number_format($this->gaji, 0, ',', '.');
     }
 
+    // Relasi dengan tabel relasi many to many nya
+    public function penggajianpegawai()
+    {
+        return $this->hasMany(PenggajianPegawai::class, 'id_jabatan');
+    }
+
 }
