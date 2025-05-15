@@ -10,10 +10,6 @@ class Pegawai extends Model
     /** @use HasFactory<\Database\Factories\PegawaiFactory> */
     use HasFactory;
 
-<<<<<<< HEAD
-    protected $table = 'pegawai';
-    protected $guarded = [];
-=======
     protected $table = 'pegawai'; // atau 'pegawai', sesuaikan dengan nama tabelmu
     protected $primaryKey = 'id_pegawai';
     public $incrementing = false;
@@ -55,5 +51,4 @@ protected static function boot()
 }
 
 
->>>>>>> 5fb1c9b1e47b8631942b4405d37aff5825c47e39
 }
