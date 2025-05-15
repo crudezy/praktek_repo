@@ -11,8 +11,5 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $table = 'pegawai';
-<<<<<<< HEAD
-=======
     protected $guarded = [];
->>>>>>> ba9c7c36cccd3ad1fa9aa4de034e2bc9d93de9dd
 }
