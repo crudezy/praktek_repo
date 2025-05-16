@@ -41,7 +41,8 @@ class LayananResource extends Resource
                     ->label('Nama Paket')
                     ->options([
                         'Cuci Kering' => 'Cuci Kering',
-                        'Cuci Setrika' => 'Cuci Setrika'
+                        'Setrika' => 'Setrika',
+                        'Cuci Kering & Setrika' => 'Cuci Kering & Setrika'  
                     ])
                     ->required()
                     ->reactive() // Membuat dropdown reaktif
