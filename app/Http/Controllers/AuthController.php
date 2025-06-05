@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     // method untuk menampilkan halaman awal login
+    public function showLanding()
+    {
+        return view('landing');
+    }
+
+    // method untuk menampilkan halaman awal login
     public function showLoginForm()
     {
         return view('login');
@@ -30,7 +36,7 @@ class AuthController extends Controller
         // if (Auth::attempt($credentials)) {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_group' => 'customer'])) {
             $request->session()->regenerate();
-            return redirect()->intended('/depan');
+            return redirect()->intended('/depan'); 
         }
 
         return back()->withErrors([
@@ -45,7 +51,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('/landing');
     }
 
     // ubah password

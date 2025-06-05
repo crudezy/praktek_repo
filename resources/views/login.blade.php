@@ -5,148 +5,95 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Laundry Telkom - Login</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-  <style>
-    * {
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      background-color: #f4f6f9;
-      margin: 0;
-    }
-
-    .login-container {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .form-section {
-      flex: 1;
-      padding: 60px;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .form-section h2 {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .form-section p {
-      color: #6c757d;
-      margin-bottom: 30px;
-    }
-
-    .form-group label {
-      font-weight: 500;
-    }
-
-    .form-control {
-      border-radius: 8px;
-      padding: 12px;
-    }
-
-    .btn-primary {
-      background-color: #6A6F4C;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      background-color: #5c613f;
-    }
-
-    .form-check-label {
-      font-size: 0.9rem;
-      color: #495057;
-    }
-
-    .illustration-section {
-      flex: 1;
-      background-image: url('{{ asset("images/assets/bg.jpg") }}');
-      /* Ganti path sesuai lokasi gambarmu */
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-
-
-    .illustration-section img {
-      max-width: 90%;
-      height: auto;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 768px) {
-      .login-container {
-        flex-direction: column-reverse;
-      }
-
-      .form-section,
-      .illustration-section {
-        flex: none;
-        width: 100%;
-        height: auto;
-      }
-
-      .form-section {
-        padding: 40px 30px;
-      }
-
-      .illustration-section {
-        padding: 20px;
-      }
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-  <div class="login-container">
-    <!-- Form Section -->
-    <div class="form-section">
-      <h2>Welcome Back 👋</h2>
-      <p>Please enter your login credentials to continue</p>
+  <div class="flex h-screen">
+    <!-- Left Section -->
+    <div class="flex-[3] relative bg-cover bg-center text-white"
+      style="background-image: url('{{ asset('images/login.jpg') }}');">
+      <!-- Overlay Gelap -->
+      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
 
-      <form method="POST" action="{{ url('/login') }}">
-        @csrf
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+      <!-- Tulisan di Kiri Atas -->
+      <div class="absolute top-6 left-6">
+        <div class="text-4xl font-bold text-blue-500">
+          KitaLaundry.
         </div>
+        <p class="text-sm text-gray-300 mt-1">
+          Dapatkan produktivitas yang tinggi <br> melalui otomatisasi dan hemat banyak waktu!
+        </p>
+      </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-        </div>
+      <!-- Tulisan di Kiri Bawah -->
+      <div class="absolute bottom-6 left-6">
+        <p class="text-sm text-gray-300">© 2025 Laundry Telkom. All rights reserved.</p>
+      </div>
+    </div>
 
-        <div class="form-group form-check mb-4">
-          <input type="checkbox" class="form-check-input" id="remember">
-          <label class="form-check-label" for="remember">Remember me for 30 days</label>
-        </div>
+    <!-- Right Section -->
+    <div class="flex-[2] bg-white flex flex-col justify-center items-center p-8">
+      <div class="w-full max-w-md">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome Back!</h2>
+        <p class="text-sm text-gray-600 mb-6">
+          Belum punya akun? <a href="#" class="text-blue-600 font-medium">Buat akun baru sekarang</a>, Hanya butuh kurang dari satu menit!
+        </p>
+        <form method="POST" action="{{ url('/login') }}" class="space-y-4">
+          @csrf
+          <!-- Email Input -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
 
-        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+          <!-- Password Input -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
 
-        <!-- Tambahan alert -->
+          <!-- Remember Me and Forgot Password -->
+          <div class="flex items-center justify-between">
+            <label class="flex items-center text-sm text-gray-600">
+              <input type="checkbox" class="mr-2 rounded border-gray-300 focus:ring-blue-500">
+              Remember me
+            </label>
+            <a href="#" class="text-sm text-blue-600 font-medium">Forgot password?</a>
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit"
+            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition">
+            Login Now
+          </button>
+
+          <!-- Divider -->
+          <div class="flex items-center my-4">
+            <div class="flex-grow border-t border-gray-300"></div>
+            <span class="px-4 text-sm text-gray-500">or</span>
+            <div class="flex-grow border-t border-gray-300"></div>
+          </div>
+
+          <!-- Login with Google -->
+          <button type="button"
+            class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition flex items-center justify-center gap-2">
+            <img src="{{ asset('images/google.webp') }}" alt="Google Logo" class="w-5 h-5">
+            Login with Google
+          </button>
+        </form>
+
+        <!-- Sign Up Link -->
+        <p class="text-center mt-4 text-sm text-gray-600">
+          Don't have an account? <a href="#" class="text-blue-600 font-medium">Sign Up</a>
+        </p>
+
+        <!-- Error Alert -->
         @if ($errors->any())
-        <div style="color: red;">
+        <div class="mt-4 text-red-600 text-sm">
           <ul>
             @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -154,22 +101,10 @@
           </ul>
         </div>
         @endif
-
-      </form>
-    </div>
-
-    <!-- Illustration Section -->
-    <div class="illustration-section">
-
-      <img src="{{ asset('images/logos/logo.jpg') }}" alt="Login Illustration" style="width: 300px; height: 300px; border-radius: 50%; object-fit: cover;">
-
+      </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>

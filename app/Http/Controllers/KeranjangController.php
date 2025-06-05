@@ -156,8 +156,6 @@ class KeranjangController extends Controller
                 $penjualan->tagihan = $tagihan->total;
                 $penjualan->save();
 
-                // update stok layanan kurangi jumlah
-                Layanan::where('id', $id_layanan)->decrement('stok', $jumlah);
 
                 // hitung total layanan
                 $jmllayanandibeli = DB::table('penjualan')
@@ -201,27 +199,44 @@ class KeranjangController extends Controller
                         ->first();
         $id_pembeli = $pembeli->id;
 
+        
         $layanans = DB::table('penjualan')
-                        ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
-                        ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-                        ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
-                        ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
-                        ->select('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli', 'penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual', 
-                                 'layanans.foto','pembayaran.order_id',
-                                  DB::raw('SUM(penjualan_layanan.jml) as total_layanan'),
-                                  DB::raw('SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_belanja'))
-                        ->where('penjualan.pembeli_id', '=',$id_pembeli) 
-                        ->where(function($query) {
-                            $query->where('pembayaran.gross_amount', 0)
-                                  ->orWhere(function($q) {
-                                      $q->where('pembayaran.status_code', '!=', 200)
-                                        ->where('pembayaran.jenis_pembayaran', 'pg');
-                                  });
-                        })
-                        ->groupBy('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli','penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual',
-                                  'layanans.foto','pembayaran.order_id',
-                                 )
-                        ->get();
+            ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
+            ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
+            ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
+            ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
+            ->select(
+                'penjualan.id',
+                'penjualan.no_faktur',
+                'pembeli.nama_pembeli',
+                'penjualan_layanan.id_layanan',
+                'layanans.nama_paket',
+                'penjualan_layanan.harga_jual',
+                'layanans.foto',
+                'pembayaran.order_id',
+                DB::raw('SUM(penjualan_layanan.jml) as total_layanan'),
+                DB::raw('SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_belanja')
+            )
+            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where(function ($query) {
+                $query->where('pembayaran.gross_amount', 0)
+                      ->orWhere(function ($q) {
+                          $q->where('pembayaran.status_code', '!=', 200)
+                            ->where('pembayaran.jenis_pembayaran', 'pg');
+                      });
+            })
+            ->groupBy(
+                'penjualan.id',
+                'penjualan.no_faktur',
+                'pembeli.nama_pembeli',
+                'penjualan_layanan.id_layanan',
+                'layanans.nama_paket',
+                'penjualan_layanan.harga_jual',
+                'layanans.foto',
+                'pembayaran.order_id'
+            )
+            ->get();
+    
 
         // hitung jumlah total tagihan
         $ttl = 0; $jml_layanan = 0; $kode_faktur = '';
@@ -270,7 +285,7 @@ class KeranjangController extends Controller
                             'id'=> $i,
                             'price' => $k->harga_jual,
                             'quantity' => $k->total_layanan,
-                            'name' => $k->nama_layanan,
+                            'name' => $k->nama_paket,
                     );
                     $i++;
                     // tambahkan ke myarray
@@ -340,7 +355,7 @@ class KeranjangController extends Controller
                         ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
                         ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
                         ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
-                        ->select('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli', 'penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual', 
+                        ->select('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli', 'penjualan_layanan.id_layanan', 'layanans.nama_paket','penjualan_layanan.harga_jual', 
                                  'layanans.foto','pembayaran.order_id',
                                   DB::raw('SUM(penjualan_layanan.jml) as total_layanan'),
                                   DB::raw('SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_belanja'))
@@ -352,7 +367,7 @@ class KeranjangController extends Controller
                                         ->where('pembayaran.jenis_pembayaran', 'pg');
                                   });
                         })
-                        ->groupBy('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli','penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual',
+                        ->groupBy('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli','penjualan_layanan.id_layanan', 'layanans.nama_paket','penjualan_layanan.harga_jual',
                                   'layanans.foto','pembayaran.order_id',
                                  )
                         ->get();
@@ -374,71 +389,53 @@ class KeranjangController extends Controller
         }
     }
 
+
     // untuk menghapus layanan dari keranjang
+
     public function hapus($id_layanan)
     {
-        date_default_timezone_set('Asia/Jakarta');
-        $id_user = Auth::user()->id;
-
-        // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-        $pembeli = Pembeli::where('user_id', $id_user)
-                        ->select(DB::raw('id'))
-                        ->first();
-        $id_pembeli = $pembeli->id;
-
-        $sql = "DELETE FROM penjualan_layanan WHERE id_layanan = ? AND penjualan_id = (SELECT penjualan.id FROM penjualan join pembayaran on (penjualan.id=pembayaran.penjualan_id) WHERE penjualan.pembeli_id = ? AND ((pembayaran.gross_amount = 0) or (pembayaran.jenis_pembayaran='pg' and pembayaran.status_code<>'200')))";
-        $deleted = DB::delete($sql, [$id_layanan,$id_pembeli]);
-
-        $penjualan = DB::table('penjualan')
-            ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-            ->select('penjualan.id')
-            ->where('penjualan.pembeli_id', $id_pembeli)
-            ->where(function($query) {
-                $query->where('pembayaran.gross_amount', 0)
-                      ->orWhere(function($q) {
-                          $q->where('pembayaran.status_code', '!=', 200)
-                            ->where('pembayaran.jenis_pembayaran', 'pg');
-                      });
-            })
-            ->first();
-
-        // Update total tagihan pada tabel penjualan
-        $tagihan = DB::table('penjualan')
-        ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
-        ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-        ->select(DB::raw('SUM(harga_jual * jml) as total'))
-        ->where('penjualan.pembeli_id', '=', $id_pembeli) 
-        ->where(function($query) {
-            $query->where('pembayaran.gross_amount', 0)
-                  ->orWhere(function($q) {
-                      $q->where('pembayaran.status_code', '!=', 200)
-                        ->where('pembayaran.jenis_pembayaran', 'pg');
-                  });
-        })
-        ->first();
-
-        if ($penjualan) {
-            DB::table('penjualan')
-                ->where('id', $penjualan->id)
-                ->update(['tagihan' => $tagihan->total]);
+        try {
+            date_default_timezone_set('Asia/Jakarta');
+            $id_user = Auth::user()->id;
+    
+            // Dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
+            $pembeli = Pembeli::where('user_id', $id_user)->first();
+            if (!$pembeli) {
+                \Log::error('Pembeli tidak ditemukan', ['id_user' => $id_user]);
+                return response()->json(['success' => false, 'message' => 'Pembeli tidak ditemukan.']);
+            }
+    
+            $id_pembeli = $pembeli->id;
+    
+            $sql = "DELETE FROM penjualan_layanan 
+            WHERE id_layanan = ? 
+            AND penjualan_id = (
+                SELECT id FROM (
+                    SELECT penjualan.id 
+                    FROM penjualan 
+                    JOIN pembayaran ON (penjualan.id = pembayaran.penjualan_id) 
+                    WHERE penjualan.pembeli_id = ? 
+                    AND (
+                        pembayaran.gross_amount = 0 
+                        OR (pembayaran.jenis_pembayaran = 'pg' AND pembayaran.status_code <> '200')
+                    )
+                    ORDER BY penjualan.tgl DESC
+                    LIMIT 1
+                ) AS subquery
+            )";
+    $deleted = DB::delete($sql, [$id_layanan, $id_pembeli]);
+    
+            if (!$deleted) {
+                \Log::error('Gagal menghapus layanan dari keranjang', ['id_layanan' => $id_layanan, 'id_pembeli' => $id_pembeli]);
+                return response()->json(['success' => false, 'message' => 'Gagal menghapus layanan dari keranjang.']);
+            }
+    
+            \Log::info('Layanan berhasil dihapus', ['id_layanan' => $id_layanan, 'id_pembeli' => $id_pembeli]);
+            return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
+        } catch (\Exception $e) {
+            \Log::error('Error saat menghapus layanan', ['message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        $jmllayanandibeli = DB::table('penjualan')
-                            ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
-                            ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
-                            ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-                            ->select(DB::raw('COUNT(DISTINCT id_layanan) as total'))
-                            ->where('penjualan.pembeli_id', '=', $id_pembeli) 
-                            ->where(function($query) {
-                                $query->where('pembayaran.gross_amount', 0)
-                                      ->orWhere(function($q) {
-                                          $q->where('pembayaran.status_code', '!=', 200)
-                                            ->where('pembayaran.jenis_pembayaran', 'pg');
-                                      });
-                            })
-                            ->get();
-
-        return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus', 'total' => $tagihan->total, 'jmllayanandibeli'=>$jmllayanandibeli[0]->total ?? 0]);
     }
 
     // untuk autorefresh dari server midtrans yang sudah terbayarkan akan diupdatekan ke database
@@ -583,26 +580,47 @@ class KeranjangController extends Controller
         ->first();
 
         $layanans = DB::table('penjualan')
-                        ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
-                        ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-                        ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
-                        ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
-                        ->select('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli', 'penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual', 
-                                 'layanans.foto',
-                                  DB::raw('SUM(penjualan_layanan.jml) as total_layanan'),
-                                  DB::raw('SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_belanja'))
-                        ->where('penjualan.pembeli_id', '=',$id_pembeli) 
-                        ->where(function($query) {
-                            $query->where('pembayaran.gross_amount', 0)
-                                  ->orWhere(function($q) {
-                                      $q->where('pembayaran.status_code', '!=', 200)
-                                        ->where('pembayaran.jenis_pembayaran', 'pg');
-                                  });
-                        })
-                        ->groupBy('penjualan.id','penjualan.no_faktur','pembeli.nama_pembeli','penjualan_layanan.id_layanan', 'layanans.nama_layanan','penjualan_layanan.harga_jual',
-                                  'layanans.foto',
-                                 )
-                        ->get();
+                ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
+                ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
+                ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
+                ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
+                ->select(
+                    'penjualan.id',
+                    'penjualan.no_faktur',
+                    'penjualan.tagihan',
+                    'penjualan.status',
+                    'penjualan.tgl',
+                    'pembeli.nama_pembeli',
+                    'penjualan_layanan.id_layanan',
+                    'layanans.nama_paket',
+                    'penjualan_layanan.harga_jual',
+                    'layanans.foto',
+                    'pembayaran.order_id',
+                    DB::raw('SUM(penjualan_layanan.jml) as total_harga'), // Alias untuk total_harga
+                    DB::raw('SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_belanja') // Alias untuk total_belanja
+                )
+                ->where('penjualan.pembeli_id', '=', $id_pembeli)
+                ->where(function ($query) {
+                    $query->where('pembayaran.gross_amount', 0)
+                        ->orWhere(function ($q) {
+                            $q->where('pembayaran.status_code', '!=', 200)
+                                ->where('pembayaran.jenis_pembayaran', 'pg');
+                        });
+                })
+                ->groupBy(
+                    'penjualan.id',
+                    'penjualan.no_faktur',
+                    'penjualan.tagihan',
+                    'penjualan.status',
+                    'penjualan.tgl',
+                    'pembeli.nama_pembeli',
+                    'penjualan_layanan.id_layanan',
+                    'layanans.nama_paket',
+                    'penjualan_layanan.harga_jual',
+                    'layanans.foto',    
+                    'pembayaran.order_id'
+                )
+                ->get();
 
         $ttl = 0; $jml_layanan = 0; $kode_faktur = '';
         foreach($layanans as $p){

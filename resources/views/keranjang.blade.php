@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('konten')
 <body>
@@ -162,23 +162,22 @@
 
               <meta name="csrf-token" content="{{ csrf_token() }}">
               <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                @foreach($layanans as $p)
-                <div class="col">
-                  <div class="product-item">
-                    <!-- <span class="badge bg-success position-absolute m-3">-30%</span> -->
-                    <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
-                    <figure>
-                      <a href="{{ Storage::url($p->foto) }}" title="Product Title">
-                        <img src="{{ Storage::url($p->foto) }}" class="img-fluid">
-                      </a>
-                    </figure>
-                    <h3>{{$p->nama_paket}}</h3>
-                    <span class="qty">Jumlah Pembelian: {{ $p->total_harga }} Unit</span><br>
-                    <span class="qty"><b>Total : {{rupiah($p->total_belanja)}}</b></span> <br>
-                    <button class="w-100 btn btn-danger btn-sm" type="submit" onclick="hapus({{ $p->id_layanan }})">Hapus</button>
-                  </div>
-                </div>
-                @endforeach
+        
+@foreach($layanans as $p)
+<div class="col">
+  <div class="product-item">
+    <figure>
+      <a href="{{ Storage::url($p->foto) }}" title="Product Title">
+        <img src="{{ Storage::url($p->foto) }}" class="img-fluid">
+      </a>
+    </figure>
+    <h3>{{ $p->nama_paket }}</h3>
+    <span class="qty">Jumlah Pembelian: {{ $p->total_layanan }} Unit</span><br>
+    <span class="qty"><b>Total : {{ rupiah($p->total_belanja) }}</b></span><br>
+    <button class="w-100 btn btn-danger btn-sm" type="submit" onclick="hapus({{ $p->id_layanan }})">Hapus</button>
+  </div>
+</div>
+@endforeach
               </div>
             
               <!-- / product-grid -->
@@ -252,58 +251,49 @@
 
 <!-- untuk sintak hapus data -->
  <script>
-  function hapus(id_layanan) {
-        // console.log(productId);
-        fetch('/hapus/'+id_layanan, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  function hapus(idLayanan) {
+    fetch(`/hapus/${idLayanan}`, {
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
             }
+            return response.json();
         })
-        .then(response => response.json())
-        .then(data => {
+        .then((data) => {
+            console.log("Response:", data); // Debugging respons dari server
             if (data.success) {
-                // alert("Produk berhasil dihapus!");
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Produk berhasil dihapus dari keranjang!',
+                    icon: "success",
+                    title: "Berhasil!",
+                    text: data.message,
                     showConfirmButton: false,
-                    timer: 2000 // Popup otomatis hilang setelah 2 detik
+                    timer: 2000,
                 });
 
-                // let vtotal = new Intl.NumberFormat("en-IN").format(data.total);
-                let formatter = new Intl.NumberFormat('id-ID', {
-                              style: 'currency',
-                              currency: 'IDR',
-                              minimumFractionDigits: 0
-                            });
-                let vtotal = formatter.format(data.total);
-                document.getElementById('cart-total').textContent = "Total: " +vtotal;
-                document.getElementById('total_belanja').textContent = vtotal;
-                // jmlbarangdibeli
-                document.getElementById('cart-count').textContent = data.jmllayanandibeli;
-
-                location.reload(); // Refresh tampilan
+                // Reload halaman untuk memperbarui keranjang
+                location.reload();
             } else {
-                // alert("Gagal menghapus produk.");
-                console.log(data);
-                // Swal.fire({
-                //   icon: 'error',
-                //   title: 'Oops...',
-                //   text: 'Gagal menghapus produk dari keranjang!'
-                // });
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: data.message || "Gagal menghapus layanan dari keranjang!",
+                });
             }
         })
-        .catch(error => {
-        console.error('Error:', error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Terjadi Kesalahan',
-              text: error.message || 'Terjadi kesalahan saat menghapus produk.',
-          });
+        .catch((error) => {
+            console.error("Error:", error); // Debugging error di konsol
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: `Terjadi kesalahan saat menghapus layanan dari keranjang. Detail: ${error.message}`,
+            });
         });
-    }
+}
  </script>
 
 @endsection

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('konten')
 <body>
@@ -243,6 +243,14 @@
 </section>
 
 <!-- Tambahan Javascript untuk Handler Penambahan dan Pengurangan Jumlah Produk -->
+
+<script>
+    // Auto reload setiap 30 detik
+    setInterval(function() {
+        location.reload();
+    }, 30000); // 30000 ms = 30 detik
+</script>
+
  <script>
     // event handler untuk proses tombol di tekan 
     document.addEventListener("click", function(event) {
@@ -271,58 +279,57 @@
       });
 
       // fungsi untuk menangani request
-    function addToCart(productId) {
-        let quantityInput = document.getElementById("quantity-" + productId);
-        let quantity = parseInt(quantityInput.value) || 1;
-        let formData = new FormData();
-        formData.append('id_layanan', productId);
-        formData.append('quantity', quantity);
-        
-        // Kirim data ke Laravel melalui fetch ke method tambah
-        fetch('/tambah', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Ambil CSRF Token
-            },
-            body: formData
-        })
-        .then(response => response.json()) // Ubah respons menjadi JSON
-      
-        .then(data => {
+      function addToCart(productId) {
+    let quantityInput = document.getElementById("quantity-" + productId);
+    let quantity = parseInt(quantityInput.value) || 1;
+
+    console.log("ID Layanan:", productId); // Debugging ID layanan
+    console.log("Quantity:", quantity); // Debugging jumlah
+
+    let formData = new FormData();
+    formData.append("id_layanan", productId);
+    formData.append("quantity", quantity);
+
+    fetch("/tambah", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Response:", data); // Debugging respons dari server
             if (data.success) {
-                // alert("Produk berhasil ditambahkan ke keranjang!");
-                // Sweet Alert
+                // Perbarui jumlah harga di keranjang
+                if (data.total_belanja) {
+                    document.getElementById("total_belanja").textContent = data.total_belanja;
+                }
+
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Produk berhasil ditambahkan ke keranjang!',
+                    icon: "success",
+                    title: "Berhasil!",
+                    text: "Produk berhasil ditambahkan ke keranjang!",
                     showConfirmButton: false,
-                    timer: 2000 // Popup otomatis hilang setelah 2 detik
+                    timer: 2000,
                 });
-                // let vtotal = new Intl.NumberFormat("en-IN").format(data.total);
-                let formatter = new Intl.NumberFormat('id-ID', {
-                              style: 'currency',
-                              currency: 'IDR',
-                              minimumFractionDigits: 0
-                            });
-                let vtotal = formatter.format(data.total);
-                document.getElementById('cart-total').textContent = "Total: " +vtotal;
-                document.getElementById('total_belanja').textContent = vtotal;
-                // jmlbarangdibeli
-                document.getElementById('cart-count').textContent = data.jmlbarangdibeli;
-            //     // console.log(response.json());
             } else {
-                alert("Gagal menambahkan produk ke keranjang.");
                 Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Gagal menambahkan produk ke keranjang!'
+                    icon: "error",
+                    title: "Ooqps...",
+                    text: data.message || "Gagal menambahkan produk ke keranjang!",
                 });
-                // alert(response.text());
             }
         })
-        // .catch(error => console.error('Error:', error));
-    }
+        .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Terjadi kesalahan saat menambahkan produk ke keranjang.",
+            });
+        });
+}
 
  </script>
 <!-- Akhir  Tambahan Javascript untuk Handler Penambahan dan Pengurangan Jumlah Produk-->
