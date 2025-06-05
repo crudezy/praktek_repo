@@ -66,8 +66,12 @@ class AuthController extends Controller
             'password' => 'required|string|min:5',
         ]);
         $user = Auth::user();
-        $user->password = Hash::make($request->password);
-        $user->save();
+        if ($user instanceof \App\Models\User) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+        } else {
+            return redirect()->back()->withErrors(['user' => 'User instance not found or invalid.']);
+        }
 
         return redirect()->route('depan')->with('success', 'Password berhasil diperbarui!');
     }
