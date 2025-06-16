@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,8 +63,8 @@ Route::resource('jabatan', JabatanController::class);
 
 // untuk contoh perusahaan
 use App\Http\Controllers\PerusahaanController;
-Route::resource('perusahaan', PerusahaanController::class);
-Route::get('/perusahaan/destroy/{id}', [PerusahaanController::class,'destroy']);
+// Route::resource('perusahaan', PerusahaanController::class);
+// Route::get('/perusahaan/destroy/{id}', [PerusahaanController::class,'destroy']);
 
 // contoh sampel midtrans
 use App\Http\Controllers\CobaMidtransController;
