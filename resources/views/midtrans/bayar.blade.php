@@ -6,7 +6,7 @@
     <title>Detail Pembayaran</title>
 
     <!-- Bootstrap CSS (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <script type="text/javascript"
       src="https://app.sandbox.midtrans.com/snap/snap.js"
       data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>
@@ -62,7 +62,7 @@
     payButton.addEventListener('click', function () {
         window.snap.pay('{{$snap_token}}', {
         onSuccess: function(result){
-            console.log('Pembayaran berhasil:', result);
+            // console.log('Pembayaran berhasil:', result);
             window.location.href = "/pembayaran/autorefresh/";
         },
         onPending: function(result){

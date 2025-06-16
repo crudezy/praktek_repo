@@ -14,8 +14,8 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+Route::get('/', [AuthController::class, 'showLanding'])->name('landing');
 Route::get('/landing', [AuthController::class, 'showLanding'])->name('landing');
-
 Route::get('/coa', [App\Http\Controllers\CoaController::class, 'index']);
 
 // login customer   

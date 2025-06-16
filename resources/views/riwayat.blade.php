@@ -23,8 +23,8 @@
   <div class="offcanvas-body">
     <div class="order-md-last">
       <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-primary">Jumlah Layanan</span>
-        <span id="cart-count" class="badge bg-primary rounded-pill">{{$jml_layanan ?? 0}}</span>
+        <span class="text-primary">Jumlah Barang</span>
+        <span id="cart-count" class="badge bg-primary rounded-pill">{{$jml_brg ?? 0}}</span>
       </h4>
 
       <li class="list-group-item d-flex justify-content-between">
@@ -45,19 +45,19 @@
     <div class="row py-3 border-bottom">
       <div class="col-sm-4 col-lg-3 text-center text-sm-start">
         <div class="main-logo">
-          <a href="index.html">
+          <a href="/depan">
             <img src="images/logo.png" alt="logo" class="img-fluid">
           </a>
         </div>
       </div>
-      <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-        <div class="cart text-end d-none d-lg-block dropdown">
+      <!-- <div class="justify col-sm-4 col-lg-6 d-none d-sm-block text-end ms-auto">
+        <div class="cart d-inline-block dropdown">
           <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-            <span class="fs-6 text-muted dropdown-toggle">Keranjang Anda</span>
-            <span class="cart-total fs-5 fw-bold" id="total_belanja">{{rupiah($total_tagihan) ?? 0}}</span>
+        <span class="fs-6 text-muted dropdown-toggle">Keranjang Anda</span>
+        <span class="cart-total fs-5 fw-bold" id="total_belanja">{{rupiah($total_tagihan) ?? 0}}</span>
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </header>

@@ -530,9 +530,17 @@
 
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart"
         aria-labelledby="CartOffcanvasLabel">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header justify-content-between">
             <h5 class="offcanvas-title" id="CartOffcanvasLabel">Keranjang & Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <ul class="d-flex justify-content-end list-unstyled my-auto">
+            <li>
+                <a href="{{ url('/ubahpassword') }}" class="rounded-circle bg-light p-2 mx-1">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#user"></use>
+                </svg>
+                </a>
+            </li>
+            </ul>
         </div>
         <div class="offcanvas-body">
             <!-- Cart Summary -->
@@ -613,18 +621,17 @@
                 </div>
 
                 <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-                    <div class="search-bar row bg-white p-2 my-2 rounded-4">
+                    <!-- <div class="search-bar row bg-white p-2 my-2 rounded-4">
                         <div class="col-1">
-                            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z"/></svg> -->
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div
                     class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
 
                     <ul class="d-flex justify-content-end list-unstyled m-0">
-                        <li class="d-lg-none">
+                        <li class="d-block d-lg-none">
                             <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
@@ -632,7 +639,7 @@
                                 </svg>
                             </a>
                         </li>
-                        <li class="d-lg-none">
+                        <li class="d-block ">
                             <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
@@ -643,7 +650,7 @@
                     </ul>
 
                     <!-- Untuk Icon User -->
-                    <ul class="d-flex justify-content-end list-unstyled m-0">
+                    <!-- <ul class="d-flex justify-content-end list-unstyled m-0">
                         <li>
                             <a href="{{ url('/ubahpassword') }}" class="rounded-circle bg-light p-2 mx-1">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
@@ -651,10 +658,10 @@
                                 </svg>
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
                     <!-- Akhir Icon User -->
 
-                    <div class="cart text-end d-none d-lg-block dropdown">
+                    <div class="cart text-end d-lg-block d-none dropdown">
                         <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
                             data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                             <span class="fs-6 text-muted dropdown-toggle">Keranjang Anda</span>

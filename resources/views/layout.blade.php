@@ -1,5 +1,5 @@
-@include('layouts/header')
+<!-- @include('layouts/header') -->
  
-@yield('konten')
+<!-- @yield('konten') -->
  
-@include('layouts/footer')
+<!-- @include('layouts/footer') -->
