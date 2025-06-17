@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Services\JurnalService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -27,11 +28,13 @@ use Filament\Tables\Columns\TextColumn;
 
 use Filament\Forms\Components\Section;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class JurnalResource extends Resource
 {
     protected static ?string $model = Jurnal::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     // tambahan buat label Jurnal Umum
     protected static ?string $navigationLabel = 'Jurnal Umum';
@@ -39,11 +42,18 @@ class JurnalResource extends Resource
     // tambahan buat grup masterdata
     protected static ?string $navigationGroup = 'Laporan';
 
+    protected $jurnalService;
+
+    public function __construct(JurnalService $jurnalService)
+    {
+        $this->jurnalService = $jurnalService;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Deskripsi Jurnal')
+               Section::make('Deskripsi Jurnal')
                 ->schema([
                      //master tabel ke jurnal
                     DatePicker::make('tgl')
@@ -62,9 +72,8 @@ class JurnalResource extends Resource
                     // transaksi tabel pakai repeater
                     Repeater::make('items')
                     ->label('Detail Jurnal')
-                    ->relationship('jurnaldetail')
                     ->schema([
-                        Select::make('coa_id')
+                        Select::make('coas_id')
                             ->label('Akun')
                             ->options(Coas::all()->pluck('nama_akun', 'id'))
                             ->searchable()
@@ -90,8 +99,7 @@ class JurnalResource extends Resource
                 ->collapsed() // <- Awalnya tertutup (collapsible)
                 ->collapsible(), // <- Boleh di-expand manual
                 
-            ])
-            ->columns(1);
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -126,15 +134,21 @@ class JurnalResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->before(function (Jurnal $record) {
+                        app(JurnalService::class)->deleteJurnal($record);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Collection $records) {
+                            foreach ($records as $record) {
+                                app(JurnalService::class)->deleteJurnal($record);
+                            }
+                        }),
                 ]),
-            ])
-            ->defaultSort('tgl', 'desc')
-            ;
+            ])->defaultSort('tgl', 'desc');
     }
 
     public static function getRelations(): array
