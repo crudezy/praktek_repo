@@ -35,7 +35,7 @@ class JurnalTableOverview extends Widget
     {
         
         // dd($periode);
-        $jurnalsQuery = Jurnal::with('jurnaldetail.coa');
+        $jurnalsQuery = Jurnal::with('jurnaldetail.coas');
 
         if ($this->periode) {
             [$year, $month] = explode('-', $this->periode);

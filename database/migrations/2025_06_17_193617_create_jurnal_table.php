@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coas', function (Blueprint $table) {
+        Schema::create('jurnal', function (Blueprint $table) {
             $table->id();
-            $table->integer('header_akun');
-            $table->integer('kode_akun');
-            $table->string('nama_akun');
+            $table->date('tgl');
+            $table->string('no_referensi')->nullable();
+            $table->string('deskripsi')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coas');
+        Schema::dropIfExists('jurnal');
     }
 };

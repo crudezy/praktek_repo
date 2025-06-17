@@ -13,6 +13,14 @@ class Coas extends Model
 
     protected $guarded = [];
 
+    protected $fillable = [
+        'kode_akun',
+        'nama_akun',
+        'header_akun',
+        'saldo',
+        'posisi'
+    ];
+    
     public function journalDetail()
     {
         return $this->hasMany(JurnalDetail::class);

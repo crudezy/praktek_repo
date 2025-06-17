@@ -5,9 +5,8 @@ namespace App\Filament\Resources\JurnalResource\Pages;
 use App\Filament\Resources\JurnalResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-
-// tambahan
-use Filament\Exceptions\Halt;
+use App\Services\JurnalService;
+use Illuminate\Database\Eloquent\Model;
 
 class EditJurnal extends EditRecord
 {
@@ -20,25 +19,10 @@ class EditJurnal extends EditRecord
         ];
     }
 
-    // tambahan
-    protected function mutateFormDataBeforeSave(array $data): array
+    protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        if (!isset($data['details']) || !is_array($data['details'])) {
-            throw Halt::make()->withValidationErrors([
-                'details' => 'Detail jurnal wajib diisi.',
-            ]);
-        }
-
-        $totalDebit = collect($data['details'])->sum('debit');
-        $totalCredit = collect($data['details'])->sum('credit');
-
-        if ($totalDebit != $totalCredit) {
-            throw \Filament\Exceptions\Halt::make()->withValidationErrors([
-                'details' => 'Total debit dan kredit harus sama.',
-            ]);
-        }
-
-        return $data;
+        $jurnalService = app(JurnalService::class);
+        // Menggunakan JurnalService untuk update jurnal
+        return $jurnalService->updateJurnal($record, $data);
     }
-
 }

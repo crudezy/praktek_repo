@@ -14,7 +14,7 @@ class BukuBesarTableOverview extends Widget
 
     public $periode_awal;
     public $periode_akhir;
-    public $coa_id; // akun yang dipilih
+    public $coas_id; // akun yang dipilih
 
     protected $listeners = ['filterUpdated' => 'getViewData'];
 
@@ -23,7 +23,7 @@ class BukuBesarTableOverview extends Widget
         // Default periode awal = bulan ini
         $this->periode_awal = request('periode_awal', now()->format('Y-m'));
         $this->periode_akhir = request('periode_akhir', now()->format('Y-m'));
-        $this->coa_id = request('coa_id'); // default null
+        $this->coas_id = request('coas_id'); // default null
     }
 
     public function filterJurnal(): void
@@ -36,10 +36,10 @@ class BukuBesarTableOverview extends Widget
     {
         $saldoAwal = 0;
         $jurnalsQuery = Jurnal::with(['jurnaldetail' => function ($query) {
-            if ($this->coa_id) {
-                $query->where('coa_id', $this->coa_id);
+            if ($this->coas_id) {
+                $query->where('coas_id', $this->coas_id);
             }
-            $query->with('coa');
+            $query->with('coas');
         }])
         ->orderBy('tgl', 'asc')
         ->orderBy('id', 'asc');
@@ -51,7 +51,7 @@ class BukuBesarTableOverview extends Widget
             // Hitung saldo awal dari transaksi SEBELUM periode_awal
             $saldoAwal = Jurnal::where('tgl', '<', $awal)
             ->with(['jurnaldetail' => function ($query) {
-                $query->where('coa_id', $this->coa_id);
+                $query->where('coas_id', $this->coas_id);
             }])
             ->get()
             ->flatMap->jurnaldetail

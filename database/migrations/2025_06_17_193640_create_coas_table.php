@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jurnal', function (Blueprint $table) {
+        Schema::create('coas', function (Blueprint $table) {
             $table->id();
-            $table->date('tgl');
-            $table->string('no_referensi')->nullable();
-            $table->string('deskripsi')->nullable();
+            $table->string('kode_akun',10);
+            $table->string('nama_akun');
+            $table->string('header_akun',10);
+            $table->decimal('saldo', 15, 2)->default(0);
+            $table->enum('posisi', ['debit', 'kredit'])->default('debit');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jurnal');
+        Schema::dropIfExists('coas');
     }
 };

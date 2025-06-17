@@ -48,11 +48,11 @@
                                 
                                 {{-- Hanya tampilkan kolom jika debit ≠ 0 --}}
                                 @if($detail->debit != 0)
-                                    <td class="px-4 py-2 border">{{ $detail->coa->nama_akun ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ $detail->coas->nama_akun ?? '-' }}</td>
                                     <td class="px-4 py-2 border">{{ $jurnal->no_referensi }}</td>
                                     <td class="px-4 py-2 border text-right">{{ rupiah($detail->debit) }}</td>
                                 @else
-                                    <td class="px-4 py-2 border">&nbsp;&nbsp;&nbsp;{{ $detail->coa->nama_akun ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">&nbsp;&nbsp;&nbsp;{{ $detail->coas->nama_akun ?? '-' }}</td>
                                     <td class="px-4 py-2 border">{{ $jurnal->no_referensi }}</td>
                                     <td class="px-4 py-2 border text-right"></td>
                                 @endif
