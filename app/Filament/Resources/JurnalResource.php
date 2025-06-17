@@ -64,7 +64,7 @@ class JurnalResource extends Resource
                     ->label('Detail Jurnal')
                     ->relationship('jurnaldetail')
                     ->schema([
-                        Select::make('coas_id')
+                        Select::make('coa_id')
                             ->label('Akun')
                             ->options(Coas::all()->pluck('nama_akun', 'id'))
                             ->searchable()

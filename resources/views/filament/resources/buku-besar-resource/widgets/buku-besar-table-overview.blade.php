@@ -20,8 +20,8 @@
                             <input type="month" wire:model="periode_akhir" id="periode_akhir" class="border rounded px-2 py-1">
                         </div>
                         <div>
-                            <label for="coas_id">Akun COA:</label>
-                            <select wire:model="coas_id" id="coas_id" class="border rounded px-2 py-1">
+                            <label for="coa_id">Akun COA:</label>
+                            <select wire:model="coa_id" id="coa_id" class="border rounded px-2 py-1">
                                 <option value="">-- Pilih Akun --</option>
                                 @foreach (\App\Models\Coas::all() as $akun)
                                     <option value="{{ $akun->id }}">{{ $akun->kode_akun }} - {{ $akun->nama_akun }}</option>
@@ -79,11 +79,11 @@
                                 
                                 {{-- Hanya tampilkan kolom jika debit ≠ 0 --}}
                                 @if($detail->debit != 0)
-                                    <td class="px-4 py-2 border">{{ $detail->coas->nama_akun ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ $detail->coa->nama_akun ?? '-' }}</td>
                                     <td class="px-4 py-2 border">{{ $jurnal->no_referensi }}</td>
                                     <td class="px-4 py-2 border text-right">{{ rupiah($detail->debit) }}</td>
                                 @else
-                                    <td class="px-4 py-2 border">&nbsp;&nbsp;&nbsp;{{ $detail->coas->nama_akun ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">&nbsp;&nbsp;&nbsp;{{ $detail->coa->nama_akun ?? '-' }}</td>
                                     <td class="px-4 py-2 border">{{ $jurnal->no_referensi }}</td>
                                     <td class="px-4 py-2 border text-right"></td>
                                 @endif
@@ -121,4 +121,3 @@
 
     </x-filament::section>
 </x-filament-widgets::widget>
-

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('jabatan', function (Blueprint $table) {
             $table->id();
-            $table->string('id_jabatan'); // Kolom id (auto increment primary key)
-            $table->string('nama_jabatan'); // Kolom nama_jabatan (varchar)
-            $table->integer('gaji'); // Kolom gaji (decimal 15 digit, 2 angka di belakang koma)
-            $table->timestamps(); // Kolom created_at dan updated_at
+            $table->string('id_jabatan');
+            $table->enum('nama_jabatan', ['Manager', 'Karyawan Cuci', 'Kasir']);
+            $table->integer('harga');
+            $table->timestamps(); 
         });
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PembeliResource\Pages;
-use App\Filament\Resources\PembeliResource\RelationManagers;
-use App\Models\Pembeli;
+use App\Filament\Resources\PegawaiResource\Pages;
+use App\Filament\Resources\PegawaiResource\RelationManagers;
+use App\Models\Pegawai;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,16 +21,16 @@ use Filament\Forms\Components\Select;
 // untuk model ke user
 use App\Models\User;
 
-class PembeliResource extends Resource
+class PegawaiResource extends Resource
 {
-    protected static ?string $model = Pembeli::class;
+    protected static ?string $model = Pegawai::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-face-smile';
-    // merubah nama label menjadi Pembeli
-    protected static ?string $navigationLabel = 'Pembeli';
+    // merubah nama label menjadi Pegawai
+    protected static ?string $navigationLabel = 'Pegawai';
 
     // tambahan buat grup masterdata
-    protected static ?string $navigationGroup = 'Master Data Customer';
+    protected static ?string $navigationGroup = 'Master Data Karyawan';
 
     public static function form(Form $form): Form
     {
@@ -44,29 +44,21 @@ class PembeliResource extends Resource
                     ->preload() // Memuat opsi lebih awal untuk pengalaman yang lebih cepat
                     ->required()
                     ->live()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        if ($state) {
-                            $user = User::find($state);
-                            $set('nama_pembeli', $user->name);
-                        }
-                    })
                 , 
 
-                TextInput::make('kode_pembeli')
-                    ->default(fn () => Pembeli::getKodePembeli()) // Ambil default dari method getKodePembeli
-                    ->label('Kode Pembeli')
+                TextInput::make('kode_pegawai')
+                    ->default(fn () => Pegawai::getKodePegawai()) // Ambil default dari method getKodePegawai
+                    ->label('Kode Pegawai')
                     ->required()
                     ->readonly() // Membuat field menjadi read-only
                 ,
-                TextInput::make('nama_pembeli')
+                TextInput::make('nama_pegawai')
                     ->required()
-                    ->placeholder('Masukkan nama pembeli') // Placeholder untuk membantu pengguna
-                    // ->live()
-                    ->readonly() // Membuat field tidak bisa diketik manual
+                    ->placeholder('Masukkan nama pegawai') // Placeholder untuk membantu pengguna
                 ,
                 TextInput::make('alamat')
                     ->required()
-                    ->placeholder('Masukkan alamat pembeli') // Placeholder untuk membantu pengguna
+                    ->placeholder('Masukkan alamat pegawai') // Placeholder untuk membantu pengguna
                 ,
                 TextInput::make('telepon')
                     ->required()
@@ -82,8 +74,8 @@ class PembeliResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('kode_pembeli'),
-                TextColumn::make('nama_pembeli'),
+                TextColumn::make('kode_pegawai'),
+                TextColumn::make('nama_pegawai'),
                 TextColumn::make('alamat'),
                 TextColumn::make('telepon'),
             ])
@@ -112,9 +104,9 @@ class PembeliResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPembelis::route('/'),
-            'create' => Pages\CreatePembeli::route('/create'),
-            'edit' => Pages\EditPembeli::route('/{record}/edit'),
+            'index' => Pages\ListPegawais::route('/'),
+            'create' => Pages\CreatePegawai::route('/create'),
+            'edit' => Pages\EditPegawai::route('/{record}/edit'),
         ];
     }
 }
