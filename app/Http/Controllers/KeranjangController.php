@@ -204,7 +204,9 @@ class KeranjangController extends Controller
             ->first();
         $id_pembeli = $pembeli->id;
 
+        
 
+        
         $layanans = DB::table('penjualan')
             ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
@@ -338,16 +340,17 @@ class KeranjangController extends Controller
                     ]
                 );
 
-                return view(
-                    'keranjang',
-                    [
-                        'layanans' => $layanans,
-                        'total_tagihan' => $ttl,
-                        'jml_layanan' => $jml_layanan,
-                        'snap_token' => $snapToken,
-                    ]
+
+                return view('keranjang',
+                            [
+                                'layanans' => $layanans,
+                                'total_tagihan' => $ttl,
+                                'jml_layanan' => $jml_layanan,
+                                'snap_token' => $snapToken,
+                            ]
                 );
-            } else {
+            }else{
+                
                 return redirect('/depan');
             }
         } else {
@@ -410,14 +413,16 @@ class KeranjangController extends Controller
                 $kode_faktur = $p->no_faktur;
                 $idpenjualan = $p->id;
             }
-
+            
+            // DB::table('penjualan_layanan')->truncate();
             return view('keranjang', [
                 'layanans' => $layanans,
-                'total_tagihan' => $ttl,
+                'total_tagihan' => $ttl->total_belanja,
                 'jml_layanan' => $jml_layanan,
                 'snap_token' => $tagihan->transaction_id
             ]);
         }
+        
     }
 
 
@@ -568,6 +573,8 @@ class KeranjangController extends Controller
                 }
             }
         }
+        DB::table('penjualan_layanan')->truncate();
+        
         return view('autorefresh');
     }
 
@@ -664,15 +671,15 @@ class KeranjangController extends Controller
             $kode_faktur = $p->no_faktur;
             $idpenjualan = $p->id;
         }
-
-        return view(
-            'riwayat',
-            [
-                'transaksi' => $layanans,
-                'total_tagihan' => $ttl,
-                'total_belanja' => $t->total ?? 0,
-                'jmllayanandibeli' => $jmllayanandibeli[0]->total ?? 0
-            ]
-        );
+        
+        
+        return view('riwayat',
+                        [ 
+                            'transaksi' => $layanans,
+                            'total_tagihan' => $ttl,
+                            'total_belanja' => $t->total ?? 0,
+                            'jmllayanandibeli' => $jmllayanandibeli[0]->total ?? 0
+                        ]
+                    ); 
     }
 }

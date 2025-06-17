@@ -1,6 +1,441 @@
 @extends('layouts.app')
 
 @section('konten')
+<body>
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #a8d8ea 0%, #7fb3d3 100%);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --card-border: rgba(168, 216, 234, 0.3);
+        --shadow-light: 0 4px 15px rgba(116, 185, 255, 0.1);
+        --shadow-medium: 0 8px 25px rgba(116, 185, 255, 0.15);
+        --shadow-strong: 0 12px 35px rgba(116, 185, 255, 0.25);
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --border-radius: 16px;
+        --text-primary: #2c3e50;
+        --text-secondary: #7f8c8d;
+        --blue-primary: #74b9ff;
+        --blue-secondary: #0984e3;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-gradient);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(116, 185, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(168, 216, 234, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(135, 206, 235, 0.1) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* Enhanced Header */
+    header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--card-border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow-light);
+    }
+
+    .main-logo img {
+        max-height: 60px;
+        filter: drop-shadow(0 4px 8px rgba(116, 185, 255, 0.2));
+        transition: var(--transition-smooth);
+    }
+
+    .main-logo img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Section Title */
+    .bootstrap-tabs .tabs-header h3 {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2.5rem;
+        text-shadow: 0 4px 8px rgba(116, 185, 255, 0.3);
+        margin-bottom: 0;
+        position: relative;
+    }
+
+    .bootstrap-tabs .tabs-header h3::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
+        border-radius: 2px;
+    }
+
+    /* Enhanced Product Cards */
+    .product-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 30px;
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-light);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .product-item:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .product-item:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .product-item:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .product-item:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    .product-item:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .product-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(116, 185, 255, 0.1), transparent);
+        transition: var(--transition-smooth);
+        pointer-events: none;
+    }
+
+    .product-item:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-strong);
+        border-color: var(--blue-primary);
+    }
+
+    .product-item:hover::before {
+        left: 100%;
+    }
+
+    /* Wishlist Button */
+    .btn-wishlist {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: var(--transition-smooth);
+        z-index: 2;
+        box-shadow: var(--shadow-light);
+    }
+
+    .btn-wishlist:hover {
+        background: var(--blue-primary);
+        color: white;
+        transform: scale(1.1);
+        box-shadow: var(--shadow-medium);
+    }
+
+    /* Product Image */
+    .product-item figure {
+        margin-bottom: 16px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        background: #f8f9fa;
+    }
+
+    .tab-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        transition: var(--transition-smooth);
+    }
+
+    .product-item:hover .tab-image {
+        transform: scale(1.05);
+    }
+
+    /* Product Info */
+    .product-item h3 {
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    .qty {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        background: #f8f9fa;
+        padding: 4px 10px;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        display: inline-block;
+        margin-bottom: 12px;
+        font-weight: 500;
+    }
+
+    .price {
+        color: var(--blue-secondary);
+        font-weight: 700;
+        font-size: 1.3rem;
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    /* Enhanced Product Controls */
+    .d-flex.align-items-center.justify-content-between {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .product-qty {
+        background: #f8f9fa;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        min-width: 100px;
+    }
+
+    .product-qty .btn {
+        border: none;
+        padding: 6px 10px;
+        transition: var(--transition-smooth);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-qty .btn-danger {
+        background: #ff6b89;
+        color: white;
+    }
+
+    .product-qty .btn-success {
+        background: var(--blue-primary);
+        color: white;
+    }
+
+    .product-qty .btn:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
+
+    .product-qty .form-control {
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        text-align: center;
+        font-weight: 600;
+        padding: 6px 8px;
+        width: 40px;
+        font-size: 14px;
+    }
+
+    .product-qty .form-control:focus {
+        outline: none;
+        background: rgba(116, 185, 255, 0.1);
+        box-shadow: none;
+        border: none;
+        color: var(--text-primary);
+    }
+
+    .d-flex.align-items-center.gap-2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        justify-content: flex-end;
+        flex-wrap: nowrap;
+    }
+
+    .weight-label {
+        background: #e9ecef !important;
+        color: var(--text-secondary) !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .nav-link {
+        background: var(--blue-primary) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 8px 12px !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        transition: var(--transition-smooth) !important;
+        text-decoration: none !important;
+        border: none !important;
+        box-shadow: var(--shadow-light);
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+        min-width: 80px !important;
+        text-align: center !important;
+    }
+
+    .nav-link:hover {
+        background: var(--blue-secondary) !important;
+        color: white !important;
+        transform: translateY(-2px) !important;
+        box-shadow: var(--shadow-medium) !important;
+        text-decoration: none !important;
+    }
+
+    /* Enhanced Responsive Design */
+    @media (max-width: 768px) {
+        .d-flex.align-items-center.justify-content-between {
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .d-flex.align-items-center.gap-2 {
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .nav-link {
+            font-size: 0.75rem !important;
+            padding: 6px 10px !important;
+            min-width: 70px !important;
+        }
+
+        .weight-label {
+            font-size: 0.7rem;
+            padding: 3px 6px;
+        }
+    }
+
+    /* Loading Animation untuk button */
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    .loading {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Ripple effect */
+    @keyframes ripple {
+        to {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+
+    /* Enhanced button animations */
+    .quantity-left-minus,
+    .quantity-right-plus {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quantity-left-minus:active,
+    .quantity-right-plus:active {
+        transform: scale(0.95);
+    }
+
+    /* Enhanced offcanvas and other elements */
+    .offcanvas {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-left: 1px solid var(--card-border);
+    }
+
+    .search-bar {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border) !important;
+        border-radius: 25px !important;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-light);
+    }
+
+    .search-bar:hover {
+        background: rgba(255, 255, 255, 0.95) !important;
+        transform: translateY(-2px);
+    }
+
+    .rounded-circle {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border) !important;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-light);
+    }
+
+    .rounded-circle:hover {
+        background: rgba(255, 255, 255, 0.95) !important;
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: var(--shadow-medium);
+    }
+    </style>
+
 
     <body>
 
@@ -68,8 +503,167 @@
             </defs>
         </svg>
 
-        <div class="preloader-wrapper">
-            <div class="preloader">
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart"
+        aria-labelledby="CartOffcanvasLabel">
+        <div class="offcanvas-header justify-content-between">
+            <h5 class="offcanvas-title" id="CartOffcanvasLabel">Keranjang & Menu</h5>
+            <ul class="d-flex justify-content-end list-unstyled my-auto">
+            <li>
+                <a href="{{ url('/ubahpassword') }}" class="rounded-circle bg-light p-2 mx-1">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#user"></use>
+                </svg>
+                </a>
+            </li>
+            </ul>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <h4 class="d-flex justify-content-between align-items-center">
+                    <span>Jumlah Barang</span>
+                    <span id="cart-count" class="cart-count-badge">{{$jmlbarangdibeli ?? 0}}</span>
+                </h4>
+
+                <div class="cart-total-item d-flex justify-content-between align-items-center">
+                    <span class="cart-total-text">Total (IDR)</span>
+                    <strong id="cart-total" class="cart-total-amount">{{rupiah($total_tagihan) ?? 0}}</strong>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation-menu">
+                <a href="/lihatkeranjang" class="nav-button btn-primary">
+                    <svg width="18" height="18" style="margin-right: 8px; vertical-align: middle;">
+                        <use xlink:href="#cart"></use>
+                    </svg>
+                    Lihat Keranjang
+                </a>
+
+                <a href="/depan" class="nav-button btn-dark">
+                    <svg width="18" height="18" style="margin-right: 8px; vertical-align: middle;">
+                        <use xlink:href="#category"></use>
+                    </svg>
+                    Lihat Galeri
+                </a>
+
+                <a href="/lihatriwayat" class="nav-button btn-info">
+                    <svg width="18" height="18" style="margin-right: 8px; vertical-align: middle;">
+                        <use xlink:href="#calendar"></use>
+                    </svg>
+                    Riwayat Pemesanan
+                </a>
+
+                <a href="/logout" class="nav-button btn-danger">
+                    <svg width="18" height="18" style="margin-right: 8px; vertical-align: middle;">
+                        <use xlink:href="#user"></use>
+                    </svg>
+                    Keluar
+                </a>
+            </div>
+        </div>
+    </div>
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch" aria-labelledby="Search">
+  <div class="offcanvas-header justify-content-center">
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="order-md-last">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-primary">Search</span>
+      </h4>
+      <form role="search" action="index.html" method="get" class="d-flex mt-3 gap-0">
+        <input class="form-control rounded-start rounded-0 bg-light" type="email" placeholder="What are you looking for?" aria-label="What are you looking for?">
+        <button class="btn btn-dark rounded-end rounded-0" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="container-fluid">
+    <div class="row py-3 border-bottom">
+      
+      <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+        <div class="main-logo">
+          <a href="index.html">
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+      
+        
+      </div>
+      
+      <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
+
+        <ul class="d-flex justify-content-end list-unstyled m-0">
+        <li class="d-block d-lg-none">
+                            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <use xlink:href="#cart"></use>
+                                </svg>
+                            </a>
+                        </li>
+          <li class="d-lg">
+            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
+              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#search"></use></svg>
+            </a>
+          </li>
+        </ul>
+
+        <div class="cart text-end d-none d-lg-block dropdown">
+          <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+            <span class="fs-6 text-muted dropdown-toggle">Keranjang Anda</span>
+            <span class="cart-total fs-5 fw-bold" id="total_belanja">{{rupiah($total_tagihan) ?? 0}}</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+</header>
+
+
+<section class="py-5">
+  <div class="container-fluid">
+    
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="bootstrap-tabs product-tabs">
+          <div class="tabs-header d-flex justify-content-between border-bottom my-5">
+            <h3>Keranjang Anda</h3>
+          </div>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+
+              <meta name="csrf-token" content="{{ csrf_token() }}">
+              <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+        
+@foreach($layanans as $p)
+<div class="col">
+  <div class="product-item">
+    <figure>
+      <a href="{{ Storage::url($p->foto) }}" title="Product Title">
+        <img src="{{ Storage::url($p->foto) }}" class="img-fluid">
+      </a>
+    </figure>
+    <h3>{{ $p->nama_paket }}</h3>
+    <span class="qty">Jumlah Pembelian: {{ $p->total_layanan }} Unit</span><br>
+    <span class="qty"><b>Total : {{ rupiah($p->total_belanja) }}</b></span><br>
+    <button class="w-100 btn btn-danger btn-sm" type="submit" onclick="hapus({{ $p->id_layanan }})">Hapus</button>
+  </div>
+</div>
+@endforeach
+              </div>
+            
+              <!-- / product-grid -->
+              
             </div>
         </div>
 

@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::get('/', [AuthController::class, 'showLanding'])->name('landing');
 Route::get('/landing', [AuthController::class, 'showLanding'])->name('landing');
-
-// Route::get('/coa', [App\Http\Controllers\CoaController::class, 'index']);
+Route::get('/coa', [App\Http\Controllers\CoaController::class, 'index']);
 
 // login customer   
 Route::get('/depan', [App\Http\Controllers\KeranjangController::class, 'daftarlayanan'])
