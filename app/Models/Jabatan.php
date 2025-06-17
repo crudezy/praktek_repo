@@ -4,55 +4,45 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Jabatan extends Model
 {
     use HasFactory;
 
-    protected $table = 'jabatan'; 
-    protected $primaryKey = 'id_jabatan';
-    public $incrementing = false;
-    protected $keyType = 'string';
-    protected $fillable = [
-        'id_jabatan',
-        'nama_jabatan',
-        'gaji'
-    ];
+    protected $table = 'jabatan'; // Nama tabel eksplisit
 
-    public static function generateNewId()
+    protected $guarded = [];
+
+    // Fungsi untuk menghasilkan ID jabatan baru
+    public static function getIdJabatan()
     {
-        $lastId = self::orderBy('id_jabatan', 'desc')->first()?->id_jabatan;
+        // Ambil ID jabatan terakhir
+        $sql = "SELECT IFNULL(MAX(id_jabatan), 'JBT-000') AS id_jabatan 
+                FROM jabatan";
+        $idJabatan = DB::select($sql);
 
-        if ($lastId && preg_match('/JBT(\d+)/', $lastId, $matches)) {
-            $number = (int) $matches[1] + 1;
-        } else {
-            $number = 1;
+        // Cacah hasilnya
+        foreach ($idJabatan as $idJab) {
+            $kd = $idJab->id_jabatan;
         }
 
-        return 'JBT' . str_pad($number, 3, '0', STR_PAD_LEFT);
+        // Ambil tiga digit terakhir
+        $nomor = (int) substr($kd, -3);
+        $nomor++; // Tambah 1 untuk ID berikutnya
+
+        // Format ID baru (JBT-001, JBT-002, ...)
+        return 'JBT-' . str_pad($nomor, 3, "0", STR_PAD_LEFT);
     }
 
-
-    protected static function boot()
+    // Mutator untuk menghapus koma dari harga sebelum menyimpannya ke database
+    public function setHargaAttribute($value)
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->id_jabatan)) {
-                $model->id_jabatan = self::generateNewId();
-            }
-        });
-
-        
+        $this->attributes['harga'] = str_replace(',', '', $value);
     }
 
-    public function getGajiFormatted(): string
-    {
-        return 'Rp ' . number_format($this->gaji, 0, ',', '.');
-    }
-
-    // Relasi dengan tabel relasi many to many nya
-    public function penggajianpegawai()
+    // Relasi dengan tabel penggajian_pegawai (many-to-many)
+    public function penggajianPegawai()
     {
         return $this->hasMany(PenggajianPegawai::class, 'id_jabatan');
     }

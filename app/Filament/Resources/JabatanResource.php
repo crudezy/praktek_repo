@@ -26,29 +26,37 @@ class JabatanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $navigationLabel = 'Jabatan';
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationGroup = 'Master Data Karyawan';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('id_jabatan')
-                    ->label('ID Jabatan')
-                    ->default(Jabatan::generateNewId())  // <- panggil generate ID dari model
+                    ->default(fn () => Jabatan::getIdJabatan())
+                    ->label('Id Jabatan')
                     ->readOnly()
-                    ->dehydrated(true) // tidak ikut submit, karena nanti otomatis di model juga
-                    ->placeholder('ID akan dibuat otomatis'),
+                    ->required(),
 
-                TextInput::make('nama_jabatan')
-                    ->required()
+                Select::make('nama_jabatan')
                     ->label('Nama Jabatan')
-                    ->placeholder('Masukkan nama jabatan'),
-                TextInput::make('gaji')
-                    ->label('Gaji')
-                    ->numeric()
+                    ->options([
+                        'Manager' => 'Manager',
+                        'Karyawan Cuci' => 'Karyawan Cuci',
+                        'Kasir' => 'Kasir'
+                    ])
                     ->required()
-                    ->placeholder('Masukkan gaji')
-                    ->prefix('Rp ')  
+                    ->reactive() // Membuat dropdown reaktif
+                    ->afterStateUpdated(fn ($state, callable $set) => match ($state) {
+                        'Manager' => tap($set('harga', 10000)),
+                        'Karyawan Cuci' => tap($set('harga', 4000)),
+                        'Kasir' => tap($set('harga', 4000)),
+                        default => tap($set('harga', null)),
+                    }),
+                TextInput::make('harga')
+                    ->label('Gaji')
+                    ->dehydrateStateUsing(fn ($state) => (int) str_replace('.', '', $state ?? 0)) // Simpan data dalam format angka
+                    ->required(),
             ]);
     }
 
@@ -56,19 +64,25 @@ class JabatanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_jabatan')
-                    ->label('ID Jabatan'),
+                TextColumn::make('id_jabatan')
+                    ->label('ID Jabatan')
+                    ->sortable()
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('nama_jabatan')
-                    ->label('Nama Jabatan'),
+                TextColumn::make('nama_jabatan')
+                    ->label('Nama Jabatan')
+                    ->sortable()
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('gaji')
+                TextColumn::make('gaji')
                     ->label('Gaji')
-                    ->money('IDR'),
+                    ->sortable()
+                    ->money('IDR'), // Format sebagai mata uang Rupiah
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Created At')
             ])
+            ->defaultSort('id_jabatan', 'asc')
             ->filters([
                 //
             ])

@@ -18,7 +18,7 @@ class Penggajian extends Model
 
     public static function getKodeFaktur()
     {
-        // query kode perusahaan
+        // query kode penggajian
         $sql = "SELECT IFNULL(MAX(no_faktur), 'F-0000000') as no_faktur 
                 FROM penggajian ";
         $kodefaktur = DB::select($sql);
@@ -35,16 +35,14 @@ class Penggajian extends Model
 
     }
 
-    // relasi ke tabel pembeli
+    // relasi ke tabel pegawai
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 
-      //  relasi ke tabel penjualan layanann
-    public function penggajianPegawai()
+    public function penggajianpegawai()
     {
         return $this->hasMany(PenggajianPegawai::class, 'penggajian_id');
     }
-
 }

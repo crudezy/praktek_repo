@@ -8,47 +8,59 @@ use App\Http\Requests\UpdateJabatanRequest;
 
 class JabatanController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $jabatans = Jabatan::all();
-        return view('jabatan.index', compact('jabatans'));
+        //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('jabatan.create');
+        //
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreJabatanRequest $request)
     {
-        $request->validate([
-            'nama_jabatan' => 'required|string|max:255',
-            'gaji' => 'required|numeric',
-        ]);
-
-        Jabatan::create($request->all());
-        return redirect()->route('jabatan.index')->with('success', 'Data jabatan berhasil ditambahkan.');
+        //
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(Jabatan $jabatan)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Jabatan $jabatan)
     {
-        return view('jabatan.edit', compact('jabatan'));
+        //
     }
 
-    public function update(Request $request, Jabatan $jabatan)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateJabatanRequest $request, Jabatan $jabatan)
     {
-        $request->validate([
-            'nama_jabatan' => 'required|string|max:255',
-            'gaji' => 'required|numeric',
-        ]);
-
-        $jabatan->update($request->all());
-        return redirect()->route('jabatan.index')->with('success', 'Data jabatan berhasil diupdate.');
+        //
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Jabatan $jabatan)
     {
-        $jabatan->delete();
-        return redirect()->route('jabatan.index')->with('success', 'Data jabatan berhasil dihapus.');
+        //
     }
 }

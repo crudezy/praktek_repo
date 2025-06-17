@@ -3,15 +3,15 @@
         <tr class="bg-gray-200">
             <th class="border border-gray-300 px-4 py-2">No Faktur</th>
             <th class="border border-gray-300 px-4 py-2">Tanggal Bayar</th>
-            <th class="border border-gray-300 px-4 py-2">Gaji</th>
+            <th class="border border-gray-300 px-4 py-2">Total Gaji</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($penggajian as $item)
+        @foreach($pembayarans as $pembayaran)
             <tr>
-                <td class="border border-gray-300 px-4 py-2">{{ $item->no_faktur }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ $item->tgl }}</td>
-                <td class="border border-gray-300 px-4 py-2">Rp{{ number_format($item->tagihan, 0, ',', '.') }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ $pembayaran->no_faktur }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ $pembayaran->tgl }}</td>
+                <td class="border border-gray-300 px-4 py-2">Rp{{ number_format($pembayaran->tagihan, 0, ',', '.') }}</td>
             </tr>
         @endforeach
     </tbody>
