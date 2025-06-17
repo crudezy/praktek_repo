@@ -41,7 +41,7 @@ class Penggajian extends Model
         return $this->belongsTo(Pegawai::class, 'id_pegawai');
     }
 
-      //  relasi ke tabel penjualan barang
+      //  relasi ke tabel penjualan layanann
     public function penggajianPegawai()
     {
         return $this->hasMany(PenggajianPegawai::class, 'penggajian_id');

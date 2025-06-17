@@ -510,8 +510,8 @@
             <!-- Cart Summary -->
             <div class="cart-summary">
                 <h4 class="d-flex justify-content-between align-items-center">
-                    <span>Jumlah Barang</span>
-                    <span id="cart-count" class="cart-count-badge">{{$jmlbarangdibeli ?? 0}}</span>
+                    <span>Jumlah layanan</span>
+                    <span id="cart-count" class="cart-count-badge">{{$jmllayanandibeli ?? 0}}</span>
                 </h4>
 
                 <div class="cart-total-item d-flex justify-content-between align-items-center">

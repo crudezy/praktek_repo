@@ -23,7 +23,7 @@
   <div class="offcanvas-body">
     <div class="order-md-last">
       <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-primary">Jumlah Barang</span>
+        <span class="text-primary">Jumlah layanan</span>
         <span id="cart-count" class="badge bg-primary rounded-pill">{{$jml_brg ?? 0}}</span>
       </h4>
 
