@@ -27,11 +27,11 @@ class PenjualanPerBulanChart extends ChartWidget
 
         // Ambil data total penjualan berdasarkan rumus (harga_jual - harga_beli) * jumlah
         $orders = Penjualan::query()
-            ->join('penjualan_layanan', 'Penjualan.id', '=', 'penjualan_layanan.penjualan_id')
+            ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
             ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
-            ->where('Penjualan.status', 'bayar') // Hanya status 'bayar'
-            ->whereYear('Penjualan.tgl', $year)
-            ->selectRaw('MONTH(Penjualan.tgl) as month, SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_penjualan')
+            ->where('penjualan.status', 'bayar') // Hanya status 'bayar'
+            ->whereYear('penjualan.tgl', $year)
+            ->selectRaw('MONTH(penjualan.tgl) as month, SUM(penjualan_layanan.harga_jual * penjualan_layanan.jml) as total_penjualan')
             ->groupBy('month')
             ->pluck('total_penjualan', 'month');
             // dd($data); // untuk melihat data sebelum dikirim ke chart
