@@ -66,7 +66,7 @@ class DashboardStatCards extends BaseWidget
             ,
             Stat::make('Total Keuntungan', rupiah(
                 Penjualan::query()
-                ->join('penjualan_layanan', 'Penjualan.id', '=', 'penjualan_layanan.penjualan_id') 
+                ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id') 
                 ->where('status', 'bayar') // Filter hanya yang statusnya 'bayar'
                 ->selectRaw('SUM((penjualan_layanan.harga_jual - penjualan_layanan.harga_beli) * penjualan_layanan.jml) as total_penjualan') // Perhitungan total penjualan
                 ->value('total_penjualan') // Ambil hasil perhitungan
