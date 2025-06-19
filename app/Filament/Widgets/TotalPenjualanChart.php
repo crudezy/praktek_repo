@@ -2,7 +2,7 @@
 namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
-use App\Models\penjualan;
+use App\Models\Penjualan;
 use App\Models\Penjualanlayanan;
 
 class TotalPenjualanChart extends ChartWidget
