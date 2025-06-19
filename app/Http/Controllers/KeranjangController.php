@@ -204,9 +204,6 @@ class KeranjangController extends Controller
             ->first();
         $id_pembeli = $pembeli->id;
 
-        
-
-        
         $layanans = DB::table('penjualan')
             ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')

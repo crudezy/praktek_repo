@@ -36,22 +36,11 @@ class LayananResource extends Resource
                     ->default(fn () => Layanan::getIdLayanan())
                     ->label('Id Layanan')
                     ->readOnly()
-                    ->required(),
-                Select::make('nama_paket')
+                    ->required(),    
+                TextInput::make('nama_paket')
                     ->label('Nama Paket')
-                    ->options([
-                        'Cuci Kering' => 'Cuci Kering',
-                        'Setrika' => 'Setrika',
-                        'Cuci Kering & Setrika' => 'Cuci Kering & Setrika'  
-                    ])
-                    ->required()
-                    ->reactive() // Membuat dropdown reaktif
-                    ->afterStateUpdated(fn ($state, callable $set) => match ($state) {
-                        'Cuci Kering' => tap($set('harga', 4000), fn () => $set('keterangan', 'Paket ini mencakup layanan pencucian dan pengeringan pakaian.')),
-                        'Setrika' => tap($set('harga', 5000), fn () => $set('keterangan', 'Paket ini mencakup layanan penyetrikaan pakaian.')),
-                        'Cuci Kering & Setrika' => tap($set('harga', 6000), fn () => $set('keterangan', 'Paket ini mencakup layanan pencucian dan penyetrikaan pakaian.')),
-                        default => tap($set('harga', null), fn () => $set('keterangan', null)),
-                    }),
+                    ->maxLength(255)
+                    ->required(),
     
                 TextInput::make('harga')
                     ->dehydrateStateUsing(fn ($state) => (int) str_replace('.', '', $state ?? 0)) // Simpan data dalam format angka
@@ -71,8 +60,7 @@ class LayananResource extends Resource
                 TextInput::make('keterangan')
                     ->label('Keterangan')
                     ->maxLength(255)
-                    ->required()
-                    ->readOnly(),
+                    ->required(),
             ]);
     }
 

@@ -90,7 +90,7 @@ class PenggajianResource extends Resource
                                         ->readonly()
                                         ->hidden(),
                                     TextInput::make('harga_jual')
-                                        ->label('Harga Jual')
+                                        ->label('Upah')
                                         ->numeric()
                                         ->readonly(),
                                     TextInput::make('jml')

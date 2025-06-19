@@ -20,7 +20,7 @@
       <!-- Tulisan di Kiri Atas -->
       <div class="absolute top-6 left-6">
         <div class="text-4xl font-bold text-blue-500">
-          KitaLaundry.
+          Ayo Laundry.
         </div>
         <p class="text-sm text-gray-300 mt-1">
           Dapatkan produktivitas yang tinggi <br> melalui otomatisasi dan hemat banyak waktu!

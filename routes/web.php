@@ -23,6 +23,7 @@ Route::get('/coa', [App\Http\Controllers\CoaController::class, 'index']);
 Route::get('/depan', [App\Http\Controllers\KeranjangController::class, 'daftarlayanan'])
      ->middleware('customer')
      ->name('depan');
+     
 Route::get('/login', function () {
     return view('login');
 });

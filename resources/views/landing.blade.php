@@ -13,17 +13,17 @@
   <!-- HEADER -->
   <header class="flex items-center justify-between px-8 py-4 shadow-md">
   <div class="flex items-center gap-8">
-    <!-- Logo -->
-    <div class="text-xl font-bold text-blue-700">
-      KitaLaundry.
+
+                    <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+                        <div class="main-logo">
+                            <a href="/depan"
+                                class="d-flex align-items-center justify-content-center justify-content-sm-start">
+                                <img src="images/logo.png" alt="logo" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
     </div>
 
-    <!-- Navigation kiri -->
-    <nav class="flex items-center gap-6 text-sm font-medium">
-      <a href="#" class="hover:text-blue-600">Home</a>
-      <a href="#" class="hover:text-blue-600">Layanan</a>
-    </nav>
-  </div>
 
     <!-- Login button -->
     <div>

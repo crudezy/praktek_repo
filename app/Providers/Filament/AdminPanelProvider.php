@@ -69,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\DashboardStatCards::class,
                 \App\Filament\Widgets\TotalPenjualanChart::class,
                 \App\Filament\Widgets\PenjualanPerBulanChart::class,
+                \App\Filament\Widgets\TotalPembeliChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
