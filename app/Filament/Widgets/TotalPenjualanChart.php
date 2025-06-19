@@ -13,7 +13,7 @@ class TotalPenjualanChart extends ChartWidget
     protected function getData(): array
     {
         // Ambil data total penjualan berdasarkan rumus (harga_jual - harga_beli) * jumlah
-        $data = penjualan::query()
+        $data = Penjualan::query()
             ->join('penjualan_layanan', 'penjualan.id', '=', 'penjualan_layanan.penjualan_id')
             ->join('layanans', 'penjualan_layanan.id_layanan', '=', 'layanans.id')
             ->where('penjualan.status', 'bayar') // Hanya status 'bayar'
